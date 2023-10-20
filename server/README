@@ -1,0 +1,630 @@
+Скачал библотеку Django:
+pip3 install Django==3.2.13
+Так как в проекте будут использоавны нестандартные формы Django, а свои поля то необходимо создать свой API. Для этого
+Скачал библитотеку djangorestframework:
+pip3 install djangorestframework
+Создал проект. '.' - для того, чтобы не создавать папку, а в ней папку с проектом:
+django-admin startproject tennis .
+Создал приложение:
+django-admin startapp main
+В файлу tennis/settings.py:
+
+# позволили всем подключаться к нашему сайту
+
+ALLOWED_HOSTS = ['*']
+
+# добавили наше приложение
+
+INSTALLED_APPS = [
+    ...
+    'main',
+]
+
+В файле main/models.py создадим наши модели:
+
+# модель клиента
+class Customer(models.Model):
+    surname = models.CharField(max_length=32, verbose_name='Фамилия')
+    name = models.CharField(max_length=16, verbose_name='Имя')
+    patronymic = models.CharField(max_length=32, verbose_name='Отчество')
+    data_or_birthday = models.DateField(verbose_name='Дата Рождения')
+    phone_number = models.CharField(max_length=45, verbose_name='Номер телефона')
+    email = models.EmailField(verbose_name='e-mail')
+    sex = models.CharField(max_length=7, choices=[('мужской','мужской'), ('женский','женский')])
+
+# модель стола
+class Table(models.Model):
+    price = models.DecimalField(verbose_name='Цена', max_digits=10, decimal_places=2)
+    describe = models.TextField(verbose_name='Описание')
+
+# модель тренера
+class Trener(models.Model):
+    surname = models.CharField(max_length=32, verbose_name='Фамилия')
+    name = models.CharField(max_length=16, verbose_name='Имя')
+    patronymic = models.CharField(max_length=32, verbose_name='Отчество')
+
+# модель заказа
+class Order(models.Model):
+    date = models.DateTimeField(verbose_name='Время заказа')
+    duration = models.TimeField(verbose_name='Продолжительность')
+    trenerID = models.ForeignKey(Trener, on_delete=models.CASCADE, verbose_name='Тренер', blank=True, null=True)
+    tableID = models.ForeignKey(Table, on_delete=models.CASCADE, verbose_name='Стол')
+    customerID = models.ForeignKey(Customer, on_delete=models.CASCADE, verbose_name='Заказчик')
+    price = models.DecimalField(verbose_name='Цена', max_digits=10, decimal_places=2)
+
+# модель соревноания
+class Competition(models.Model):
+    title = models.CharField(max_length=100, verbose_name='Название соревнований')
+    describe = models.TextField(verbose_name='Описание')
+    data = models.DateField(verbose_name='Дата соревнований')
+
+# модель модель записи на соревнование
+class RegistrationCompetition(models.Model):
+    customerID = models.ForeignKey(Customer, on_delete=models.CASCADE, verbose_name='Участник')
+    competitionID = models.ForeignKey(Competition, on_delete=models.CASCADE, verbose_name='Соревнования')
+    date = models.DateTimeField(verbose_name='Время записи')
+
+Для того, чтобы создать файл будующей миграции введём:
+
+python3 manage.py makemigrations
+
+Для того, чтобы посмотреть какие sql-команды будут выполнены при миграции данных вводим в консоль следующую команду:
+
+python3 manage.py sqlmigrate main 0002
+
+ВЫВОД:
+
+BEGIN;
+--
+-- Create model Competition
+--
+CREATE TABLE "main_competition" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "title" varchar(100) NOT NULL, "describe" text NOT NULL, "data" date NOT NULL);
+--
+-- Create model Table
+--
+CREATE TABLE "main_table" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "price" decimal NOT NULL, "describe" text NOT NULL);
+--
+-- Create model Trener
+--
+CREATE TABLE "main_trener" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "surname" varchar(32) NOT NULL, "name" varchar(16) NOT NULL, "patronymic" varchar(32) NOT NULL);
+--
+-- Create model RegistrationCompetition
+--
+CREATE TABLE "main_registrationcompetition" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "date" datetime NOT NULL, "competitionID_id" bigint NOT NULL REFERENCES "main_competition" ("id") DEFERRABLE INITIALLY DEFERRED, "customerID_id" bigint NOT NULL REFERENCES "main_customer" ("id") DEFERRABLE INITIALLY DEFERRED);
+--
+-- Create model Order
+--
+CREATE TABLE "main_order" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "date" datetime NOT NULL, "duration" time NOT NULL, "price" decimal NOT NULL, "customerID_id" bigint NOT NULL REFERENCES "main_customer" ("id") DEFERRABLE INITIALLY DEFERRED, "tableID_id" bigint NOT NULL REFERENCES "main_table" ("id") DEFERRABLE INITIALLY DEFERRED, "trenerID_id" bigint NULL REFERENCES "main_trener" ("id") DEFERRABLE INITIALLY DEFERRED);
+CREATE INDEX "main_registrationcompetition_competitionID_id_1e10ce85" ON "main_registrationcompetition" ("competitionID_id");
+CREATE INDEX "main_registrationcompetition_customerID_id_7645d502" ON "main_registrationcompetition" ("customerID_id");
+CREATE INDEX "main_order_customerID_id_41086101" ON "main_order" ("customerID_id");
+CREATE INDEX "main_order_tableID_id_44dc681a" ON "main_order" ("tableID_id");
+CREATE INDEX "main_order_trenerID_id_f6b60b06" ON "main_order" ("trenerID_id");
+COMMIT;
+
+Для миграции данных в базу данных введём команду:
+
+python3 manage.py migrate
+
+
+Для отображения этих моделей в админке Django в файл /main/admin регистрируем модели:
+
+from django.contrib import admin
+
+from .models import Customer, Table, Trener, Order, Competition, RegistrationCompetition
+
+
+admin.site.register(Customer)
+admin.site.register(Table)
+admin.site.register(Trener)
+admin.site.register(Order)
+admin.site.register(Competition)
+admin.site.register(RegistrationCompetition)
+
+
+Также создадим суперпользователя:
+
+python3 manage.py createsuperuser
+
+
+Запускаем тестовый веб-сервер Django:
+
+python3 manage.py runserver
+
+Далее я загружаю Ваш фронт:
+У Вас есть три папки css, image, js. Я создал в корне папку static и поместил туда ваши файлы. Также у Вас есть два
+html-файла. Для них в корне проекта я создал папку templates. В ней хранятся все html-шаблоны. И для нашего приложения
+в этой папке создал ещё одну директорию main (tennis/tempaltes/main).
+
+Для того, чтобы данные директории "Работали" в файл settings.py запишем:
+
+import os
+...
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
+Далее я в файле /main/views.py создал представление, которое просто отправляет html страницу пользователю:
+
+def index(request):
+    return render(request, 'main/index.html')
+
+Затем в папке приложения main создал файл urls.py:
+from django.urls import path
+from .views import index
+
+urlpatterns = [
+    path('', index, name='main_index'),
+]
+
+После в папке проекта импортировал include и добавил urls.py приложения main:
+from django.contrib import admin
+from django.urls import path, include # вот импортировали
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('main/', include('main.urls')) # здесь добавили
+]
+
+Затем прешёл на страницу:
+http://127.0.0.1:8000/main/
+
+И увидим, что наших стилей нет
+<img src="./readme_assets/1.png" width="100%">
+
+Для того, чтобы загрузить статические файлы необходимо в начале файла index.html прописать {% load static %}, затем оформить ссылки по типу <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
+После даннго действия загрузятся наши стили и изображения. В своём проекте Вы можете поменять Footer. Для того, чтобы не менять его на всех html страницах. Я создал базовый шаблон, который будут наследовать другие
+html-страницы.
+В папке templates создадим файл base.html:
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta charset="UTF-8">
+      <title>Теннис57</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="icon" href="{% static 'image/favicon_1.ico' %}" type="image/x-icon">
+      <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
+      <link rel="stylesheet" href="{% static 'css/our-css.css' %}"/>
+      <!-- <script src="https://vk.com/js/api/openapi.js?169" type="text/javascript"></script> -->
+  </head>
+<body>
+
+<nav class="navbar top-0 navbar-expand-lg navbar-dark bg-dark">
+
+      <a href="#" class="navbar-brand"><img src="{% static 'image/table-tennis.png' %}" width="40" height="40"></a>
+      <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#MyNav" type="button"
+        aria-controls="MyNav" aria-expanded="false" aria-label="Toggle Navigaion">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="MyNav">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a href="#schedule" class="nav-link">Расписание</a></li>
+          <li class="nav-item"><a href="#servises" class="nav-link">Услуги</a></li>
+          <li class="nav-item"><a href="#treners" class="nav-link">Тренеры</a></li>
+          <li class="nav-item"><a href="#tournament" class="nav-link">Турниры</a></li>
+          <li class="nav-item"><a href="#" class="nav-link">Фото</a></li>
+          <li class="nav-item"><a href="#" class="nav-link">Достижения</a></li>
+          <li class="nav-item"><a href="#" class="nav-link">Информация</a></li>
+          <li class="nav-item"><a href="#" class="nav-link">Контакты</a></li>
+          <li class="nav-item"><a href="#price-list" class="nav-link">Цены</a></li>
+          <li class="nav-item"><a href="#" class="nav-link">Позвонить</a></li>
+        </ul>
+        <button class="btn btn-dark">Регистрация</button>
+      </div>
+    </nav>
+{% block content %}
+
+{% endblock %}
+
+
+
+<footer class="footer">
+        <div class="container">
+            <div class="footer-row">
+                <div>
+                    <h5>Теннис57</h5>
+                    <p>Квалифицированный тренерский состав</p>
+                    <p>Обучение людей всех возрастов</p>
+                </div>
+                <div>
+                    <a href="./treners.html">Индивидуальные занятия</a><br>
+                    <a href="./treners.html">Настольный теннис для детей</a><br>
+                    <a href="./price.html">Прайс-лист</a><br>
+                    <a href="http://ttfr.ru/rus/2/">Правила игры</a>
+                </div>
+                <div>
+                    <a href="#">Расписание</a><br>
+                    <a href="https://m.rttf.ru/tournaments/?date_from=&date_to=2100-06-01&title=&halls%5B%5D=87&search=">Прошедшие турниры</a><br>
+                    <a href="https://rttf.ru/players/?type=s&rat_from=0&rat_to=5000&cities%5B%5D=96&name=&like=0&sex_m=1&sex_f=1">Рейтинг RTTF</a><br>
+                    <a href="https://r.ttw.ru/players/">Рейтинг TTW</a>
+                </div>
+                <div>
+                    <p>Мы в социальных сетях</p>
+                    <a href="https://www.youtube.com/channel/UC7coei8S1b7G4QjWXCUpfzQ"><img src="{% static 'image/youtube_1.png' %}"></a>
+                    <a href="https://vk.com/tennis57"><img src="{% static 'image/VK_Blue_Logo_t.png' %}"></a><br>
+                    <p>Телефон для связи:</p>
+                    <p>+7 900 484-90-05</p>
+                    <p>ул. Лескова, 16а, второй этаж</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="./js/bootstrap.min.js"></script>
+</body>
+</html>
+
+
+А в файле index.html удалим header, footer и  navbar. Аналогично исправим form_registration.html. Во view.py добавим:
+...
+def registrations(request):
+    return render(request, 'main/form_registration.html')
+ В файле main/urls.py:
+ ...
+    path('reg', registrations, name='registration')
+
+
+------------------------------------------------------------------------------------------------------------------------
+Разберём основные моменты коммита "Добавил тренеров"
+
+Для того, чтобы хранить фотографии тренеров в определенной папке а не в корне проекта, необходимо в settings.py добавить:
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+а в файле tennis/urls.py:
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+После данного действия мы в админке занесли данные и загрузили фото. Далее идём в наше представление main/views.py:
+# Импортируем модель тренеров
+from .models import Trener
+
+# изменяем наше представление
+def index(request):
+    treners = Trener.objects.all() # запрашиваем всех тренеров
+    return render(request, 'main/index.html', {'treners': treners})
+
+# Вот это то, что было
+def index(request):
+    return render(request, 'main/index.html')
+
+Кроме записи запроса всех тернеров, можно заметить, что render был "засунут" словарь. Посмотрите
+<a href="https://django.fun/en/docs/django/4.1/topics/http/shortcuts/>ссылку</a> (Она Вам в будущем понадобится).
+Рендер имеет имеет переменную context. Наш словарь и есть эта пременная. Сейчас мы можем использовать наш context в шаблоне:
+
+{% for trener in treners %}
+                <div class="col" >
+                    <div class="col-xs-5 col-lg m-3 border border-2 rounded">
+                        <div class="h5 mt-3">
+                          <h5>{{ trener.surname }}</h5>
+                          <h6>{{ trener.name }} {{ trener.patronymic }}</h6>
+                        </div>
+                        <div class="article-image" width="100" height="225" style="background:url({{ trener.image.url }})">
+
+                        </div>
+                        <br>
+                        <br>
+                        <a class="btn btn-light btn-lg" href="#">Записаться</a>
+                        <br>
+                        <br>
+                    </div>
+                </div>
+                {% endfor %}
+
+Здесь был использован декоратор for.
+
+------------------------------------------------------------------------------------------------------------------------
+Коммит "Добавил Регистрацию, Вход и Выход"
+
+Регистрацию я взял из старого проекта, а туда он попал из этой <a href="https://developer.mozilla.org/ru/docs/Learn/Server-side/Django/Authentication>ссылки</a>
+Там описаны все шаблоны. Но нам необходимо взаимодействовать  с почтой, поэтому в settings.py добавим:
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'misha.homi@gmail.com'
+EMAIL_HOST_PASSWORD = 'yrvsctiipzcibetb' # Это пароль приложения
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+Насчёт модели заказчика мы разговаривали. В main/forms.py (Этот файл необходимо создать):
+
+from django import forms
+from .models import Customer
+
+
+class CustomerRegistrtionForm(forms.ModelForm):
+    password = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    password2 = forms.CharField(label='Подтверждение пароля',
+                                widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = Customer
+        fields = ('surname', 'name', 'patronymic', 'data_or_birthday', 'phone_number', 'sex', 'email')
+        widgets = {
+            'surname': forms.TextInput(attrs={'class': 'form-control'}),
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'patronymic': forms.TextInput(attrs={'class': 'form-control'}),
+            'data_or_birthday': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'phone_number': forms.TextInput(attrs={'class': 'form-control', 'type': 'tel', "placeholder": "8 (123) "
+                                                                                                          "456-78-90"}),
+            'sex': forms.Select(attrs={'class': 'form-control'},
+                                choices=[('мужской', 'мужской'), ('женский', 'женский')]),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+        }
+
+    def clean_password2(self):
+        cd = self.cleaned_data
+        if cd['password'] != cd['password2']:
+            raise forms.ValidationError('Пароли не совпадают.')
+        return cd['password2']
+
+
+Затем быстро перемещаемся во views.py:
+
+def registrations(request):
+    if request.method == 'POST':
+        form = CustomerRegistrtionForm(request.POST)
+        if form.is_valid():
+            new_user = User()
+            new_user.username = form.data['email']
+            new_user.password = form.data['password']
+            new_user.email = form.data['email']
+            new_user.is_active = False
+            new_user.save()
+
+            new_customer = Customer()
+            new_customer.user = new_user
+            new_customer.surname = form.data['surname']
+            new_customer.name = form.data['name']
+            new_customer.patronymic = form.data['patronymic']
+            new_customer.data_or_birthday = form.data['data_or_birthday']
+            new_customer.phone_number = form.data['phone_number']
+            new_customer.email = form.data['email']
+            new_customer.sex = form.data['sex']
+            new_customer.save()
+
+            token_href = secrets.token_hex()
+            new_code_email = CodeEmail(email=new_user.email, code=token_href)
+            new_code_email.save()
+
+            send_mail(
+                'Здравствуйте',
+                '''Был запрос на создание аккаунта!\n
+                Ccылка для подтверждения: http://127.0.0.1:8000/main/code_control/{}'''.format(new_code_email.code),
+                'P.S. tennis',
+                [new_code_email.email],
+                fail_silently=False
+            )
+            return render(request, 'registration/register_done.html')
+
+
+    form = CustomerRegistrtionForm()
+    return render(request, 'main/form_registration.html', {'form': form})
+
+Также, чтобы пользоавтель был активным только после перехода, я создал модель CodeEmail
+
+class CodeEmail(models.Model):
+    code = models.CharField(max_length=15)
+    email = models.EmailField()
+
+ и Создал представление активации:
+
+ def code_control(request, code):
+    code_email = get_object_or_404(CodeEmail, code=code)
+    user = get_object_or_404(User, email=code_email.email)
+    user.is_active = True
+    user.save()
+    code_email.delete()
+    return render(request, 'registration/code_control_done.html')
+
+------------------------------------------------------------------------------------------------------------------------
+Коммит "переделал базу данных и сделал брони"
+
+Расширил таблицы пользователей, добавил таблицу заказа занятия с тренером. Также стоит заметить, что были добавлены функция
+(точнее метод) __str__(self), который возвращает удобочитаемое (или неформальное) строковое представление объекта, и класс
+Meta, в котором мы определили переменные verbose_name и verbose_name_plural. В результате этого наша админка стала более
+понятной для нас.
+
+Сделал бронирование стола:
+
+В forms.py добавил:
+from .models import ..., Order
+
+class OrderForm(forms.ModelForm):
+
+    class Meta:
+        model = Order
+        fields = ('date', 'duration', 'tableID', 'trenerID')
+        widgets = {
+            'duration': forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}),
+            # 'tableID': forms.TextInput(attrs={'class': 'form-control'}),
+            # 'trenerID': forms.CheckboxInput(attrs={'class': 'form-control'}),
+            'date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+        }
+
+
+Изменил представление индекс для обработки post запросов:
+
+def index(request):
+    treners = Trener.objects.all()
+    if request.method == 'POST':
+
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            order = Order()
+            order.date = form.data['date']
+            order.duration = form.data['duration']
+            order.time = form.data['time']
+            table = get_object_or_404(Table, id=form.data['tableID'])
+            order.tableID = table
+            customer = get_object_or_404(Customer, user=request.user)
+            order.customerID = customer
+            hours, minuties = order.get_hours_and_minutes()
+            order.price = hours * table.price + minuties * table.price / 60
+            order.save()
+    form = OrderForm()
+    return render(request, 'main/index.html', {'form': form, 'treners': treners})
+
+в наблон добавил форму и кнопку:
+
+<button class="btn btn-danger" id="show-form-btn" onclick="show_form()">Забронировать стол</button>
+<div class="form-container" >
+    <span class="close-btn" onclick="remove_form()">&times;</span>
+    <div>
+        <div class="container">
+            <div class="row">
+                <div class="col" style="background-color: #ffffff; ">
+                 <form action="" method="post">
+                    <div class="form-group"  >
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary">Забронировать</button>
+
+                    </div>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+для того, чтобы форма вызывалась пришлось поработать с javascript и css:
+
+.form-container {
+  position: fixed;
+  z-index: 999;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease-in-out;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.form-container.show-form {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#show-form-btn {
+  position: fixed;
+  z-index: 1000;
+  bottom: 20px;
+  right: 20px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+}
+
+
+const formContainer = document.querySelector('.form-container')
+const showFormBtn = document.querySelector('#show-form-btn')
+
+function show_form() {
+const formContainer = document.querySelector('.form-container')
+  formContainer.classList.add('show-form');
+}
+
+function remove_form() {
+const formContainer = document.querySelector('.form-container')
+  formContainer.classList.remove('show-form');
+}
+------------------------------------------------------------------------------------------------------------------------
+Коммит "Добавил соревнования и регистрацию на них"
+
+Создал три представления и использовал для двух из них классы:
+
+def CreateRegistrationCompetition(request, pk):
+
+    if request.method == 'POST':
+        form = RegistrationCompetitionForm(request.POST)
+        if form.is_valid():
+            new_reg_comp = RegistrationCompetition()
+            customer = get_object_or_404(Customer, user=request.user)
+            new_reg_comp.customerID = customer
+            competition = get_object_or_404(Competition, pk=pk)
+            new_reg_comp.competitionID = competition
+            new_reg_comp.price = competition.price
+            new_reg_comp.rating = form.data['rating']
+            new_reg_comp.save()
+    return render(request, 'main/CreateRegistrationCompetition.html')
+
+
+
+class CompetitionDetailView(DetailView):
+    model = Competition
+    pk_url_kwarg = 'pk'
+    template_name = 'main/our_competition_detail.html'
+    extra_context = {'form': RegistrationCompetitionForm}
+
+
+class CompetitionListView(ListView):
+    model = Competition
+    template_name = 'main/our_competition.html'
+    context_object_name = 'competitions'
+
+Создал новую форму
+class RegistrationCompetitionForm(forms.ModelForm):
+    class Meta:
+        model = RegistrationCompetition
+        fields = ('rating',)
+        widgets = {
+            'rating': forms.NumberInput(attrs={'class': 'form-control'}),
+        }
+
+И создал 3 новых шаблона
+- CreateRegistrationCompetition.html
+- our_competition.html
+- our_competition_detail.html
+
+Посмотрите main/models.py там немного изменены модели.
+______________________________________________________________________________________________________________________
+Коммит добавил Api
+
+Для того, чтобы пользоавтель при вводе данных бронирования стола видел доступные ему столы, я сделал Api, которое при
+запросе выдает свободные столы. В main был создан файл serializers.py, который нужен по сути для создания JSON. В main/views.py
+создал новое представление, которое возвращает данные в формате JSON. А в main/forms.py в OrderForm в словаре widjets для
+tableID в attr добавил событие. В my.js прописал это событие.
+----------------------------------------------------------------------------------------------------------------------
+Коммит промежуточный коммит 2
+
+Расширил javascript функцию, теперь она оповещает пользователя, что столов нет.
+Исправил Выход: теперь он выглядит по другому и перенаправляет на главную страницу.
+Теперь при регистрации на соревнование пользователя перенаправляет на главный экран с сообщением
+В админке у трененера теперь не цена, а стоимость занятия (руб/час)
+Сделан сброс пароля
+Сделал личный кабинет

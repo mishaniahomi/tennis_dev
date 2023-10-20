@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col" style="background-color: #ffffff; ">
+            Регистрация на соревнование
+            <h1>{{ competition.title }} {{ competition.data }}</h1>
+            <textarea rows="10" cols="45"  readonly="true">{{ competition.describe }}</textarea>
+            <h2>{{ competition.price }}</h2>
+            <form action="registration" method="post">
+                    <div class="form-group"  >
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+
+                    </div>
+                </form>
+
+
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

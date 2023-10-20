@@ -1,0 +1,35 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+         <div class="col-md-12">
+              <div class="card">
+                <div class="card-header text-center">
+                  Удаление заказа
+                </div>
+                <div class="card-body">
+                    Дата: {{ order.date }}<br>
+                    Время: {{ order.time }}<br>
+                    Продолжительнсоть: {{ order.duration }}<br>
+                    Cтол: {{ order.tableID }}<br>
+                    {% if order.trenerID %}
+                    Тренер: {{ order.trenerID }}<br>
+                    {% else %}
+
+                    {% endif %}
+                    Стоимость: {{ order.price }}<br>
+
+                  <form method= "post">
+                        {% csrf_token %}
+                        <input type="submit" vаluе="Удалить">
+                  </form>
+                </div>
+              </div>
+            </div>
+    </div>
+</div>
+{% endblock %}

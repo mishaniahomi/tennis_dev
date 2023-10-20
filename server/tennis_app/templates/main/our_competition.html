@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col" style="background-color: #ffffff; ">
+            <table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Название</th>
+      <th scope="col">Дата</th>
+      <th scope="col">Цена</th>
+    </tr>
+  </thead>
+  <tbody >
+
+  {% for competition in competitions %}
+    <tr>
+
+        <td>{{ competition.title }}</td>
+        <td>{{ competition.data }}</td>
+        <td>{{ competition.price }}</td>
+        <td><a href="{{ competition.id }}" class="btn btn-dark">Зарегистрироваться</a></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

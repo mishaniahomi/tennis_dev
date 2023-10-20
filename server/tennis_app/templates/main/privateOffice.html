@@ -1,0 +1,185 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+         <div class="col-md-12">
+              <div class="card">
+                <div class="card-header text-center">
+                  Ваши соревнования
+                </div>
+                <div class="card-body">
+
+
+                     <table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Название</th>
+      <th scope="col">Дата</th>
+      <th scope="col">Цена</th>
+         <th scope="col">Действия</th>
+    </tr>
+   <tr>
+       <form  class="form-container" action="{% url 'privateOffice' %}">
+       <th><input class="form-control" type="text" name="comp_name" value="{{ request.GET.comp_name }}">  </th>
+         <th><input class="form-control" type="date" name="comp_date" value="{{ request.GET.comp_date }}">  </th>
+       <th><input class="form-control" type="text" name="comp_price" value="{{ request.GET.comp_price }}">  </th>
+         <th scope="col"><button type="submit" class="btn btn-outline-primary"> Поиск</button></th>
+       </form>
+    </tr>
+  </thead>
+  <tbody >
+{% for competition in page_competitions %}
+
+      <tr>
+
+        <td>{{ competition.competitionID.title }}</td>
+        <td>{{ competition.competitionID.data }}</td>
+        <td>{{ competition.price }}</td>
+        <td>
+            {% if competition.competitionID.is_active %}
+            <a href="{% url 'RegistrationCompetitionDeleteView' competition.id %}" class="btn btn-dark">Отменить</a>
+            {% endif %}
+        </td>
+    </tr>
+
+{% endfor %}
+
+
+  </tbody>
+</table>
+                    <nav aria-label="Page navigation example">
+  <ul class="pagination">
+                                {% if page_competitions.has_previous %}
+
+                                  <li class="page-item">  <a class="page-link" href="?page=1">&laquo; В начало</a>
+                                  <li class="page-item">  <a class="page-link" href="?page={{ page_obj.previous_page_number }}">предыдущее</a>
+                                {% endif %}
+
+                                <span class="page-link">
+                                    Страница {{ page_competitions.number }} из {{ page_competitions.paginator.num_pages }}.
+                                </span>
+
+                                {% if page_competitions.has_next %}
+                                  <li class="page-item">  <a class="page-link" href="?page={{ page_competitions.next_page_number }}">Далее</a>
+                                  <li class="page-item">  <a class="page-link" href="?page={{ page_competitions.paginator.num_pages }}">Конец &raquo;</a>
+                                {% endif %}
+                    </ul>
+</nav>
+                </div>
+              </div>
+            </div>
+
+
+ <div class="col-md-12">
+              <div class="card">
+                <div class="card-header text-center">
+                  Ваши Заказы
+                </div>
+                <div class="card-body">
+
+
+                     <table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Дата заказа</th>
+        <th></th>
+      <th scope="col">Время заказа</th>
+      <th scope="col">Продолжительность</th>
+        <th scope="col">Стол</th>
+        <th scope="col">Тренер</th>
+        <th scope="col">Стоимость</th>
+
+         <th scope="col">Действия</th>
+    </tr>
+    <tr>
+
+        <form  class="form-container" action="{% url 'privateOffice' %}">
+    <th><input class="form-control" type="date" name="order_date" value="{{ request.GET.order_date }}">  </th>
+            <th><input class="form-control" type="date" name="order_date_max" value="{{ request.GET.order_date_max }}">  </th>
+      <th><input class="form-control" type="time" name="order_time" value="{{ request.GET.order_time }}">  </th>
+      <th>
+          <select name="order_duration" class="form-control"  id="id_duration">
+  <option value="" selected="">---------</option>
+
+  <option value="01:00:00" {% if request.GET.order_duration  == "01:00:00" %} selected {% endif %}>01:00</option>
+
+  <option value="01:30:00" {% if request.GET.order_duration  == "01:30:00" %} selected {% endif %}>01:30</option>
+
+  <option value="02:00:00" {% if request.GET.order_duration  == "02:00:00" %} selected {% endif %}>02:00</option>
+
+  <option value="02:30:00" {% if request.GET.order_duration  == "02:30:00" %} selected {% endif %}>02:30</option>
+
+  <option value="03:00:00" {% if request.GET.order_duration  == "03:00:00" %} selected {% endif %}>03:00</option>
+
+  <option value="03:30:00" {% if request.GET.order_duration  == "03:30:00" %} selected {% endif %}>03:30</option>
+
+  <option value="04:00:00" {% if request.GET.order_duration  == "04:00:00" %} selected {% endif %}>04:00</option>
+
+  <option value="04:30:00" {% if request.GET.order_duration  == "04:30:00" %} selected {% endif %}>04:30</option>
+
+</select> </th>
+        <th>
+        <select class="form-control" id="table" name="order_table">
+                                <option value="" selected="">---------</option>
+                                    {% for table in tables %}
+                                        <option value="{{table.pk}}" {% if request.GET.order_table  == table.id %} selected {% endif %}>{{table}}</option>
+                                    {% endfor %}
+                            </select>
+
+        </th>
+        <th>
+         <select class="form-control" id="trener" name="order_trener">
+                                <option value="" selected="">---------</option>
+                                    {% for trener in treners %}
+                                        <option value="{{trener.pk}}" {% if request.GET.order_trener  == trener.id %} selected {% endif %}>{{trener}}</option>
+                                    {% endfor %}
+                            </select>
+
+        </th>
+       <th><input class="form-control" type="text" name="order_price" value="{{ request.GET.order_price }}">  </th>
+
+         <th scope="col"><button type="submit" class="btn btn-outline-primary"> Поиск</button></th>
+        </form>
+    </tr>
+  </thead>
+  <tbody>
+   {% for order in orders %}
+    <tr>
+        <td>{{ order.date }}</td>
+        <td></td>
+        <td>{{ order.time }}</td>
+        <td>{{ order.duration }}</td>
+        <td>{{ order.tableID }}</td>
+        <td>
+            {% if order.trenerID %}
+                    Тренер: {{ order.trenerID }}
+            {% else %}
+
+            {% endif %}
+
+        </td>
+        <td>{{ order.price }}</td>
+
+        <td>
+            {% if order.is_active %}
+            <a href="{% url 'OrderDeleteView' order.id  %}" class="btn btn-dark">Отменить</a>
+            {% endif %}
+        </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+                </div>
+              </div>
+            </div>
+
+
+
+    </div>
+</div>
+{% endblock %}
