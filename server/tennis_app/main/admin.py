@@ -40,8 +40,8 @@ class ServiseAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ("date", "time", "duration", "tableID", "customerID", "price", "trenerID", "endtime")
-    list_filter = ("date", "time", "duration", "tableID", "customerID", "price", "trenerID", "endtime")
+    list_display = ("date", "time", "endtime", "duration", "tableID", "customerID", "price", "trenerID")
+    list_filter = ("date", "time", "endtime", "duration", "tableID", "customerID", "price", "trenerID")
     list_filter = (('date', MyDateRangePicker), ('endtime', MyDateRangePicker))
 
 @admin.register(CodeEmail)

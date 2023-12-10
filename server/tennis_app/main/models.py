@@ -78,7 +78,7 @@ class Trener(models.Model):
 class Order(models.Model):
     date = models.DateField(verbose_name='Дата заказа')
     time = models.TimeField(verbose_name='Время заказа')
-    duration = models.TimeField(verbose_name='Продолжительность', choices=[(dt.time(hour=x//2, minute=(x%2)*30), '{:02d}:{:02d}'.format(x//2, (x%2)*30)) for x in range(2, 10)])
+    duration = models.TimeField(verbose_name='Продолжительность', choices=[(dt.time(hour=x//2, minute=(x%2)*30), '{:02d}:{:02d}'.format(x//2, (x%2)*30)) for x in range(2, 5)])
     tableID = models.ForeignKey(Table, on_delete=models.CASCADE, verbose_name='Стол')
     customerID = models.ForeignKey(Customer, on_delete=models.CASCADE, verbose_name='Заказчик')
     price = models.DecimalField(verbose_name='Цена', max_digits=10, decimal_places=2)
