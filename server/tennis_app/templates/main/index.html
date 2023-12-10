@@ -20,438 +20,446 @@
 <button id="record" class="btn btn-dark " id="show-form-btn" onclick="show_form()">Запись online</button>
 
 <div class="table_form form-container" >
-    <span class="close-btn" onclick="remove_form()">&times;</span>
-    <div>
-        <div class="container">
-            <div class="row">
-                <div class="col" style="background-color: #ffffff; ">
-                 <form action="{% url 'main_index' %}" method="post">
-                    <div class="form-group"  >
-                        {% csrf_token %}
-                        {{ form.as_p }}
-                        <p>Цена вашего заказа:</p> <p id="IDprice"></p>
-                        <button type="submit" class="btn btn-primary">Забронировать</button>
-                        <a href="{% url 'check_free_table' %}">Посмотреть занятость столов</a>
-                    </div>
-                </form>
-                </div>
+    
+  <div>
+    <div class="container">
+      <div class="row">
+        <div class="col" style="background-color: #ffffff; ">
+          <form action="{% url 'main_index' %}" method="post">
+            <div class="form-group"  >
+              <span class="close-btn" onclick="remove_form()">&times;</span>
+              {% csrf_token %}
+              {{ form.as_p }}
+              <p>Цена вашего заказа:</p> <p id="IDprice"></p>
+              <button type="submit" class="btn btn-primary">Забронировать</button>
+              <a href="{% url 'check_free_table' %}">Посмотреть занятость столов</a>
             </div>
+          </form>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 {% else %}
-<a href="{% url 'login' %}" id="record" class="btn btn-dark ">Ввойти для записи</a>
+<a href="{% url 'login' %}" id="record" class="btn btn-dark ">Войти для записи</a>
 {% endif %}
 
- <div class="container">
-        <div class="container text-center" id="schedule">
-            <div class="row">
-              <div class="col" >
-                <br><br><br>
-                <h1>Расписание турниров</h1>
-                <h5>Для уточнения подробностей нажмите на название турнира в календаре!</h5>
-                <br>
-                <iframe src="https://calendar.google.com/calendar/embed?showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=500&amp;wkst=2&amp;bgcolor=%2333ccff&amp;src=oksnokian73%40mail.ru&amp;color=%23122C57&amp;ctz=Europe%2FMoscow" scrolling="no" style="border-width: 0px;" width="800px" height="600px" frameborder="0"></iframe>
-              </div>
+<div class="container">
+
+  <!-- Раздел "Расписание турниров" -->
+
+  <div class="container text-center" id="schedule">
+    <div class="row">
+      <div class="col">
+        <br><br><br>
+        <h1>Расписание турниров</h1>
+        <h5>Для уточнения подробностей нажмите на название турнира в календаре!</h5>
+        <br>
+        <iframe src="https://calendar.google.com/calendar/embed?showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=500&amp;wkst=2&amp;bgcolor=%2333ccff&amp;src=oksnokian73%40mail.ru&amp;color=%23122C57&amp;ctz=Europe%2FMoscow" scrolling="no" style="border-width: 0px;" width="100%" height="500vh" frameborder="0"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- Раздел "Услуги" -->      
+
+  <div class="container" id="servises">
+
+    <div class="container text-center">
+      <div class="row">
+        <div class="col"><br><br><br>
+          <h1>Услуги</h1>
+        </div>
+      </div>
+    </div><br>
+
+    <div class="row">
+      
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+          
+        {% for servise in servises %}
+
+        <div class="col-lg-4" >
+          
+          <div class="card mb-4 border border-2 rounded">
+            
+            <div class="card-header text-center">
+              <h5 class="card-title">{{ servise.serviseName }}<br>
             </div>
+
+            <div class="article-image" width="100" height="225" style="background:url({{ servise.image.url }})"></div>
+            
+            <div class="card-body">
+              <p class="card-text text-center">
+                {{ servise.describe }}<br>
+              </p>
+            </div>
+            
+            <div class="text-center mb-3">
+              <button class="btn btn-lg btn-outline-secondary "  onclick="f1({{ trener.id }})">Записаться</button>
+              <br><br>
+            </div>
+
           </div>
         </div>
-        <div class="container" id="servises">
-          <div class="container text-center" >
-            <div class="row">
-              <div class="col">
-                <br><br><br>
-                <h1>Услуги</h1>
-              </div>
-            </div><br>
-          </div>
+        
+        {% endfor %}
+           
+      </div>
+    </div>
 
-          <div class="row">
-
-            <div class="col-lg-4">
-              <div class="card mb-4 border border-2 rounded">
-                <div class="card-header text-center">
-                  <h5 class="card-title">Индивидуальные занятия</h5>
-                </div>
-                <div class="article-image" style="background:url({% static 'image/IMG-20221102-WA0005.jpg' %}"></div>
-                <div class="card-body">
-                  <p class="card-text text-center">С Вами будут работать лучшие тренеры</p>
-                </div>
-                <div class="text-center mb-3">
-                    <button onclick="show_form()" class="btn btn-outline-secondary btn-lg" data-toggle="modal" data-target="#myModal">Записаться</button>
-
-                </div>
-              </div>
-            </div>
-
-            <div class="col-lg-4">
-              <div class="card mb-4 border border-2 rounded">
-                <div class="card-header text-center">
-                  <h5 class="card-title">Групповые занятия</h5>
-                </div>
-                  <div class="article-image" style="background:url({% static 'image/IMG-20220202-WA0011.jpg' %}"></div>
-               <div class="card-body">
-                  <p class="card-text text-center">В группе может заниматься любой желающий</p>
-                </div>
-                <div class="text-center mb-3">
-                      <a class="btn btn-outline-secondary btn-lg" href="https://www.google.com">Посмотреть</a>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-lg-4">
-              <div class="card mb-4 border border-2 rounded">
-                <div class="card-header text-center">
-                  <h5 class="card-title">Аренда столов</h5>
-                </div>
-                <div class="article-image" style="background:url({% static 'image/IMG-20220223-WA0030.jpg' %})"></div>
-                <div class="card-body">
-                  <p class="card-text text-center">Ваша сменная обувь, наши - ракетки и мячи</p>
-                </div>
-                <div class="text-center mb-3">
-                    <a class="btn btn-outline-secondary btn-lg" onclick="show_form()" >Забронировать</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
+  </div>  
 
  <!-- Раздел "Наши тренеры" -->
 
-<div class="container text-center" id="">
-          <div class="row">
-            <div class="col">
-              <br><br><br>
-              <h1 id="treners">Наши тренеры</h1>
+  <div class="container" id="treners">
+  
+    <div class="container text-center">
+      <div class="row">
+        <div class="col"><br><br><br>
+          <h1 id="treners">Наши тренеры</h1>
+        </div>  
+      </div>
+    </div><br>
+
+    <div class="container-fluid">
+
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+
+        {% for trener in treners %}
+
+          <div class="col-lg-4" >
+            
+            <div class="card mb-4 border border-2 rounded">
+              
+              <div class="card-header text-center">
+                <h5 class="card-title">{{ trener.surname }}<br>
+                  {{ trener.name }} {{ trener.patronymic }}
+                </h5>
+              </div>
+
+              <div class="article-image" width="100" height="225" style="background:url({{ trener.image.url }})"></div>
+                   
+              <div class="card-body">
+                <p class="card-text text-center">
+                  {% if trener.sports_rank %}
+                  {{ trener.sports_rank }}<br>
+                  {% else %}<br>
+                  {% endif %}
+
+
+                  {% if trener.education %}
+                  {{ trener.education }}<br>
+                  {% else %}<br>
+                  {% endif %}
+
+                  {% if trener.peculiarities %}
+                  {{ trener.peculiarities }}<br>
+                  {% else %}<br>
+                  {% endif %}
+                </p>
+              </div>
+
+              <div class="text-center mb-3">
+                {% if trener.is_active %}
+                <button class="btn btn-lg btn-outline-secondary "  onclick="f1({{ trener.id }})">Записаться</button>
+                {% else %}<br><br>
+                {% endif %}
+              </div>
+
             </div>
           </div>
-          <br>
-          <div class="container-fluid">
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-                {% for trener in treners %}
-                <div class="col-lg-4" >
-                    <div class="card mb-4 border border-2 rounded">
-                        <div class="card-header text-center">
-                          <h5 class="card-title">{{ trener.surname }}<br>
-                          {{ trener.name }} {{ trener.patronymic }}</h5>
-                        </div>
-                        <div class="article-image" width="100" height="225" style="background:url({{ trener.image.url }})">
 
-                        </div>
-                         <div class="card-body">
-                  <p class="card-text text-center">
-                    {% if trener.sports_rank %}
-                            {{ trener.sports_rank }}<br>
-                    {% else %}
-                           <br>
-                    {% endif %}
-
-
-                    {% if trener.education %}
-                            {{ trener.education }}<br>
-                    {% else %}
-                           <br>
-                    {% endif %}
-
-
-                     {% if trener.peculiarities %}
-                            {{ trener.peculiarities }}<br>
-                    {% else %}
-                           <br>
-                    {% endif %}
-
-                   </p>
-                </div>
-                         <div class="text-center mb-3">
-                           {% if trener.is_active %}
-                  <button class="btn btn-lg btn-outline-secondary "  onclick="f1({{ trener.id }})">Записаться</button>
-                           {% else %}
-                           <br><br>
-                            {% endif %}
-
-                         </div>
-
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-          </div>
-        </div>
-
-        <!-- Раздел "Турниры и рейтинги участников" -->
-
-
-         <div class="container" id="tournament">
-          <div class="container text-center" >
-            <div class="row">
-              <div class="col">
-                <br><br><br>
-                <h1>Турниры и рейтинги участников</h1>
-              </div>
-            </div><br>
-          </div>
-
-          <div class="row">
-
-            <div class="col-lg-3">
-              <div class="card mb-4 border border-2 rounded">
-                <div class="card-header text-center">
-                  <h5 class="card-title">Рейтинг Орёл RTTF</h5>
-                </div>
-                 <div class="article-image" style="background:url({% static 'image/OE5ZQC0.jpg' %}"></div>
-                <div class="card-body">
-                  <p class="card-text"></p>
-                </div>
-                <div class="text-center mb-3">
-                  <a class="btn btn-lg btn-outline-secondary " href="https://rttf.ru/players/?type=s&rat_from=0&rat_to=5000&cities%5B%5D=96&name=&like=0&sex_m=1&sex_f=1">Смотреть</a>
-                </div>
-              </div>
-              </div>
-            <div class="col-lg-3">
-              <div class="card mb-4 border border-2 rounded">
-                <div class="card-header text-center">
-                  <h5 class="card-title">Прошедшие турниры</h5>
-                </div>
-                 <div class="article-image" style="background:url({% static 'image/44bcc0ed7719ad8848b2.jpg' %}"></div>
-                <div class="card-body">
-                  <p class="card-text"></p>
-                </div>
-                <div class="text-center mb-3">
-                  <a class="btn btn-lg btn-outline-secondary " href="https://m.rttf.ru/tournaments/?date_from=&date_to=2100-06-01&title=&halls%5B%5D=87&search=">Смотреть</a>
-                </div>
-              </div>
-              </div>
-            <div class="col-lg-3">
-              <div class="card mb-4 border border-2 rounded">
-                <div class="card-header text-center">
-                  <h5 class="card-title">Рейтинг Орёл TTW</h5>
-                </div>
-                 <div class="article-image" style="background:url({% static 'image/OE5ZQC0.jpg' %}"></div>
-                <div class="card-body">
-                  <p class="card-text"></p>
-                </div>
-                <div class="text-center mb-3">
-                  <a class="btn btn-lg btn-outline-secondary " href="https://r.ttw.ru/players/">Смотреть</a>
-                </div>
-              </div>
-              </div>
-            <div class="col-lg-3">
-              <div class="card mb-4 border border-2 rounded">
-                <div class="card-header text-center">
-                  <h5 class="card-title">Записаться на турниры tennis57</h5>
-                </div>
-                 <div class="article-image" style="background:url({% static 'image/44bcc0ed7719ad8848b2.jpg' %}"></div>
-                <div class="card-body">
-                  <p class="card-text"></p>
-                </div>
-                <div class="text-center mb-3">
-                  <a class="btn btn-lg btn-outline-secondary " href="{% url 'competitionlistview' %}">Смотреть</a>
-                </div>
-              </div>
-              </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        {% endfor %}
 
       </div>
-
-     <!-- Раздел VK Widget -->
-
-        <div class="container text-center">
-          <div class="row">
-            <div class="col">
-              <br><br><br>
-              <h1>Мы ВКонтакте</h1>
-              <h3>Присоединяйтесь к группе и получайте больше новостей от нас!</h3>
-            </div>
-          </div><br>
-          <script type="text/javascript" src="https://vk.com/js/api/openapi.js?168"></script>
-          <div class="row">
-            <div class="col">
-              <div id="vk_groups" style="width: 100%; height: 503.802px; background: none">
-                <iframe name="fXD5e962" frameborder="0" src="https://vk.com/widget_community.php?app=0&amp;width=1200px&amp;_ver=1&amp;gid=119764209&amp;mode=4&amp;color1=&amp;color2=&amp;color3=&amp;class_name=&amp;no_cover=1&amp;wide=1&amp;height=500&amp;url=https%3A%2F%2Ftennis57.ru%2F&amp;referrer=https%3A%2F%2Fwww.google.com%2F&amp;title=%D0%A2%D0%B5%D0%BD%D0%BD%D0%B8%D1%8157&amp;1890627d4ef" width="100%" height="500" scrolling="no" id="vkwidget1" style="overflow: hidden; height: 503.802px;"></iframe>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- Раздел "Фото" -->
-
-        <div class="container" id="carousel">
-          <div class="container text-center" >
-            <div class="row">
-              <div class="col">
-                <br><br><br>
-                <h1>Фото с чемпионатов и турниров</h1>
-              </div>
-            </div><br>
-          </div>
-
-
-
-
-
-
-<div id="carouselExampleIndicators" class="carousel slide w-75 mx-auto" data-ride="carousel">
-
-  <div class="carousel-inner">
-
-
-     {% get_photoes as photoes %}
-        {% get_active_photo as  active_photo%}
-                {% for photo in photoes %}
-                    {% if photo == active_photo %}
-                        <div class="carousel-item active">
-                    {% else %}
-                        <div class="carousel-item">
-                    {% endif %}
-                        <img src="{{ photo.file.url }}" class="d-block w-100">
-                        </div>
-                {% endfor %}
+    </div>
   </div>
 
+  <!-- Раздел "Турниры и рейтинги участников" -->
 
-  <button class="carousel-control-prev" href="#carouselExampleIndicators"  data-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="sr-only">Предыдущий</span>
-  </button>
-  <button class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="sr-only">Следующий</span>
-  </button>
+
+  <div class="container" id="tournament">
+
+    <div class="container text-center">
+      <div class="row">
+        <div class="col"><br><br><br>
+          <h1>Турниры и рейтинги участников</h1>
+        </div>
+      </div><br>
+    </div>
+
+    <div class="row">
+
+      <div class="col-lg-3">
+
+        <div class="card mb-4 border border-2 rounded">
+
+          <div class="card-header text-center">
+            <h5 class="card-title">Рейтинг Орёл RTTF</h5>
+          </div>
+
+          <div class="article-image" style="background:url({% static 'image/OE5ZQC0.jpg' %}"></div>
+          
+          <div class="card-body">
+            <p class="card-text"></p>
+          </div>
+         
+          <div class="text-center mb-3">
+            <a class="btn btn-lg btn-outline-secondary " href="https://rttf.ru/players/?type=s&rat_from=0&rat_to=5000&cities%5B%5D=96&name=&like=0&sex_m=1&sex_f=1" target="_blank">Смотреть</a>
+          </div>
+
+        </div>
+      </div>
+            
+      <div class="col-lg-3">
+
+        <div class="card mb-4 border border-2 rounded">
+          <div class="card-header text-center">
+            <h5 class="card-title">Прошедшие турниры</h5>
+          </div>
+            
+          <div class="article-image" style="background:url({% static 'image/44bcc0ed7719ad8848b2.jpg' %}"></div>
+          
+          <div class="card-body">
+            <p class="card-text"></p>
+          </div>
+          
+          <div class="text-center mb-3">
+            <a class="btn btn-lg btn-outline-secondary " href="https://m.rttf.ru/tournaments/?date_from=&date_to=2100-06-01&title=&halls%5B%5D=87&search=" target="_blank">Смотреть</a>
+          </div>
+        </div>
+      </div>
+            
+      <div class="col-lg-3">
+
+        <div class="card mb-4 border border-2 rounded">
+
+          <div class="card-header text-center">
+            <h5 class="card-title">Рейтинг Орёл TTW</h5>
+          </div>
+            
+          <div class="article-image" style="background:url({% static 'image/OE5ZQC0.jpg' %}"></div>
+          
+          <div class="card-body">
+            <p class="card-text"></p>
+          </div>
+
+          <div class="text-center mb-3">
+            <a class="btn btn-lg btn-outline-secondary " href="https://r.ttw.ru/players/" target="_blank">Смотреть</a>
+          </div>
+
+        </div>
+
+      </div>
+            
+      <div class="col-lg-3">
+
+        <div class="card mb-4 border border-2 rounded">
+
+          <div class="card-header text-center">
+            <h5 class="card-title">Запись на турниры</h5>
+          </div>
+            
+          <div class="article-image" style="background:url({% static 'image/44bcc0ed7719ad8848b2.jpg' %}"></div>
+          
+          <div class="card-body">
+            <p class="card-text"></p>
+          </div>
+          
+          <div class="text-center mb-3">
+            <a class="btn btn-lg btn-outline-secondary " href="{% url 'competitionlistview' %}">Записаться</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Раздел VK Widget -->
+
+  <div class="container text-center">
+    <div class="row">
+      <div class="col">
+        <br><br><br>
+        <h1>Мы ВКонтакте</h1>
+        <h3>Присоединяйтесь к группе и получайте больше новостей от нас!</h3>
+      </div>
+    </div><br>
+    <script type="text/javascript" src="https://vk.com/js/api/openapi.js?168"></script>
+    <div class="row">
+      <div class="col">
+        <div id="vk_groups" style="width: 100%; height: 503.802px; background: none">
+          <iframe name="fXD5e962" frameborder="0" src="https://vk.com/widget_community.php?app=0&amp;width=1200px&amp;_ver=1&amp;gid=119764209&amp;mode=4&amp;color1=&amp;color2=&amp;color3=&amp;class_name=&amp;no_cover=1&amp;wide=1&amp;height=500&amp;url=https%3A%2F%2Ftennis57.ru%2F&amp;referrer=https%3A%2F%2Fwww.google.com%2F&amp;title=%D0%A2%D0%B5%D0%BD%D0%BD%D0%B8%D1%8157&amp;1890627d4ef" width="100%" height="500" scrolling="no" id="vkwidget1" style="overflow: hidden; height: 503.802px;"></iframe>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Раздел "Фото" -->
+
+  <div class="container" id="carousel">
+    
+    <div class="container text-center" >
+      <div class="row">
+        <div class="col">
+          <br><br><br>
+          <h1>Фото с чемпионатов и турниров</h1>
+        </div>
+      </div><br>
+    </div>
+
+    <div id="carouselExampleIndicators" class="carousel slide w-75 mx-auto" data-ride="carousel">
+
+      <div class="carousel-inner">
+
+
+        {% get_photoes as photoes %}
+          {% get_active_photo as  active_photo%}
+            {% for photo in photoes %}
+              {% if photo == active_photo %}
+                <div class="carousel-item active">
+                {% else %}
+                <div class="carousel-item">
+              {% endif %}
+                            <img src="{{ photo.file.url }}" class="d-block w-100">
+                            </div>
+            {% endfor %}
+      </div>
+      
+
+      <button class="carousel-control-prev" href="#carouselExampleIndicators"  data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Предыдущий</span>
+      </button>
+      <button class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Следующий</span>
+      </button>
+    </div>
+  </div>  
+
+
+  <!-- Раздел "Ознакомительная информация" -->
+
+  <div class="container" id="information">
+    
+    <div class="container text-center" >
+      <div class="row">
+        <div class="col">
+          <br><br><br>
+          <h1>Ознакомительная информация</h1>
+        </div>
+      </div><br>
+    </div>
+
+    <div class="row">
+
+      <div class="col-lg-3">
+        <div class="card mb-4 border border-2 rounded">
+          <div class="card-header text-center">
+            <h5 class="card-title">Правила игры в настольный теннис</h5>
+          </div>
+          <img class="card-img-top mt-3" src="{% static 'image/_4.jpg' %}" style="height: 225px; width: 100%; display: block; object-fit: scale-down;" data-holder-rendered="true">
+          <div class="card-body">
+            <p class="card-text"></p>
+          </div>
+          <div class="text-center mb-3">
+            <a class="btn btn-lg btn-outline-secondary " href="https://kcr.ttfr.ru/storage/media/1425/fdbe9ca7ece127920a3b8fff0d73ac22e46a7dbe.pdf" target="_blank">Читать</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3">
+        <div class="card mb-4 border border-2 rounded">
+          <div class="card-header text-center">
+            <h5 class="card-title">Разрешенные мячи <br> ITTF</h5>
+          </div>
+          <img class="card-img-top mt-3" src="{% static 'image/yellow-ping-pong-bal.jpg' %}" style="height: 225px; width: 100%; display: block; object-fit: scale-down;" data-holder-rendered="true">
+          <div class="card-body">
+            <p class="card-text"></p>
+          </div>
+          <div class="text-center mb-3">
+            <a class="btn btn-lg btn-outline-secondary " href="https://equipment.ittf.com/#/equipment/balls" target="_blank">Подробней</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3">
+        <div class="card mb-4 border border-2 rounded">
+          <div class="card-header text-center">
+            <h5 class="card-title">Список разрешенных накладок ITTF</h5>
+          </div>
+          <img class="card-img-top mt-3" src="{% static 'image/arrangement-table-te.jpg' %}" style="height: 225px; width: 100%; display: block; object-fit: scale-down;" data-holder-rendered="true">
+          <div class="card-body">
+            <p class="card-text"></p>
+          </div>
+          <div class="text-center mb-3">
+            <a class="btn btn-lg btn-outline-secondary " href="https://equipment.ittf.com/#/equipment/racket_coverings" target="_blank">Подробней</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3">
+        <div class="card mb-4 border border-2 rounded">
+          <div class="card-header text-center">
+            <h5 class="card-title">Сертифицированные ITTF столы</h5>
+          </div>
+          <img class="card-img-top mt-3" src="{% static 'image/image.png' %}" style="height: 225px; width: 100%; display: block; object-fit: scale-down;" data-holder-rendered="true">
+          <div class="card-body">
+            <p class="card-text"></p>
+          </div>
+          <div class="text-center mb-3">
+            <a class="btn btn-lg btn-outline-secondary " href="https://equipment.ittf.com/#/equipment/tables" target="_blank">Подробней</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Раздел Прайс-лист -->
+
+  <div class="container" id="price-list">
+
+    <div class="container text-center" >
+      <div class="row">
+        <div class="col"><br><br><br>
+          <h1>Прайс-лист</h1>
+        </div>
+      </div><br>
+    </div>
+
+    <div class="row">
+      
+      <div class="col-lg-2"></div>
+      <div class="col-lg-8 text-center">
+        <div class="card mb-4 border border-2 rounded">
+          
+          {% for type in services_types %}
+
+            <div class="card-header text-center">
+              <h5 class="card-title">{{ type.name }}</h5>
+            </div>
+
+            <div class="card-body">
+
+              {%  get_pricelist kind=type  as pricelist %}
+
+              {% for item in pricelist %}
+                    <p class="card-text">
+                      {{ item.description|safe  }}
+                    </p>
+              {% endfor %}
+
+            </div>
+          {% endfor %}
+        </div>
+      </div>    
+
+    </div>
+  </div>
+
 </div>
-
-
-        <!-- Раздел "Ознакомительная информация" -->
-
-        <div class="container" id="information">
-          <div class="container text-center" >
-            <div class="row">
-              <div class="col">
-                <br><br><br>
-                <h1>Ознакомительная информация</h1>
-              </div>
-            </div><br>
-          </div>
-
-          <div class="row">
-
-            <div class="col-lg-3">
-              <div class="card mb-4 border border-2 rounded">
-                <div class="card-header text-center">
-                  <h5 class="card-title">Правила игры в настольный теннис</h5>
-                </div>
-                <img class="card-img-top mt-3" src="{% static 'image/_4.jpg' %}" style="height: 225px; width: 100%; display: block; object-fit: scale-down;" data-holder-rendered="true">
-                <div class="card-body">
-                  <p class="card-text"></p>
-                </div>
-                <div class="text-center mb-3">
-                  <a class="btn btn-sm btn-outline-secondary " href="http://ttfr.ru/rus/2/">Читать</a>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-lg-3">
-              <div class="card mb-4 border border-2 rounded">
-                <div class="card-header text-center">
-                  <h5 class="card-title">Разрешенные мячи <br> ITTF</h5>
-                </div>
-                <img class="card-img-top mt-3" src="{% static 'image/yellow-ping-pong-bal.jpg' %}" style="height: 225px; width: 100%; display: block; object-fit: scale-down;" data-holder-rendered="true">
-                <div class="card-body">
-                  <p class="card-text"></p>
-                </div>
-                <div class="text-center mb-3">
-                  <a class="btn btn-sm btn-outline-secondary " href="https://equipment.ittf.com/#/equipment/balls">Подробней</a>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-lg-3">
-              <div class="card mb-4 border border-2 rounded">
-                <div class="card-header text-center">
-                  <h5 class="card-title">Список разрешенных накладок ITTF</h5>
-                </div>
-                <img class="card-img-top mt-3" src="{% static 'image/arrangement-table-te.jpg' %}" style="height: 225px; width: 100%; display: block; object-fit: scale-down;" data-holder-rendered="true">
-                <div class="card-body">
-                  <p class="card-text"></p>
-                </div>
-                <div class="text-center mb-3">
-                  <a class="btn btn-sm btn-outline-secondary " href="https://equipment.ittf.com/#/equipment/racket_coverings">Подробней</a>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-lg-3">
-              <div class="card mb-4 border border-2 rounded">
-                <div class="card-header text-center">
-                  <h5 class="card-title">Сертифицированные ITTF столы</h5>
-                </div>
-                <img class="card-img-top mt-3" src="{% static 'image/image.png' %}" style="height: 225px; width: 100%; display: block; object-fit: scale-down;" data-holder-rendered="true">
-                <div class="card-body">
-                  <p class="card-text"></p>
-                </div>
-                <div class="text-center mb-3">
-                  <a class="btn btn-sm btn-outline-secondary " href="https://equipment.ittf.com/#/equipment/tables">Подробней</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Раздел Прайс-лист -->
-
-      <div class="container" id="price-list">
-        <div class="container text-center" >
-          <div class="row">
-            <div class="col">
-              <br><br><br>
-              <h1>Прайс-лист</h1>
-            </div>
-          </div><br>
-        </div>
-
-        <div class="row">
-          <div class="col-lg-2"></div>
-          <div class="col-lg-8 text-center">
-            <div class="card mb-4 border border-2 rounded">
-                {% for type in services_types %}
-                    <div class="card-header text-center">
-                <h5 class="card-title">{{ type.name }}</h5>
-              </div>
-                <div class="card-body">
-
-                    {%  get_pricelist kind=type  as pricelist %}
-
-
-                    {% for item in pricelist %}
-                         <p class="card-text">
-                            {{ item.description|safe  }}
-                         </p>
-                    {% endfor %}
-
-
-
-                </div>
-                {% endfor %}
-
-
-
-
-
-
-
-
-
-            </div>
-          </div>
-
-
-      </div>
-
 
 {% endblock %}

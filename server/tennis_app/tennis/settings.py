@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-=va1+ylh)j3#575f2u36lbf4n#k8n7fv5n55a2@-)p)s)s3-e8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*', 'tennis57.ru']
 
 
 # Application definition
@@ -40,11 +40,11 @@ INSTALLED_APPS = [
     'main',
     'rest_framework',
     'django_admin_filters',
-    "corsheaders",
 
 ]
 
 MIDDLEWARE = [
+    #'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -52,7 +52,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'tennis.urls'
@@ -134,24 +133,17 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'misha.homi@gmail.com'
-EMAIL_HOST_PASSWORD = 'yrvsctiipzcibetb'
+#EMAIL_USE_SSL = False
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_PORT = 2525
+EMAIL_HOST_USER = 'tennis57@bk.ru'
+EMAIL_HOST_PASSWORD = 'cumnwzF47NKwAEnBxiHs'
+SERVER_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 LOGIN_REDIRECT_URL = '/'
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-    ]
-}
 
-CORS_ALLOWED_ORIGINS = [
-    'http://0.0.0.0:8000',
-    'http://localhost:8000',
-'http://127.0.0.1:8000', 
-]

@@ -19,7 +19,7 @@ function get_free_tables(){
                 selectElement.remove(0);
        }
        //console.log(date, time, duration);
-       const url = "http://127.0.0.1:8000/api/order_list_view?date="+date+"&time="+time+":00&duration="+duration;
+       const url = "/api/order_list_view?date="+date+"&time="+time+":00&duration="+duration;
 
        $.get(url, function(data, status){
        if(data['free_tablies'].length){
@@ -41,37 +41,23 @@ function get_free_tables(){
 
 function get_price() {
 
-      var duration = document.getElementById('id_duration').value;
+       var duration = document.getElementById('id_duration').value;
       var table = document.getElementById("id_tableID").options.selectedIndex;
-      var trener = document.getElementById("id_trenerID").value;
+       var trener = document.getElementById("id_trenerID").value;
 
-      var sel = document.getElementById("id_tableID");
+       var sel = document.getElementById("id_tableID");
+      // var val = sel.options[sel.selectedIndex].value;
+    //    alert(val);
 
+       console.log(duration, table, trener);
+       const url = "/api/get_price?duration="+duration+"&table="+table+"&trener="+trener;
 
-      console.log(duration, table, trener);
-      const url = " http://127.0.0.1:8000/api/get_price?duration="+duration+"&table="+table+"&trener="+trener;
-      alert( document.cookie );
-   /*   $.get(url, function(data, status){
+       $.get(url, function(data, status){
 
             console.log(data['price']);
             var price = document.getElementById("IDprice")
             price.innerHTML =  data['price'];
-      });
-*/
-      var xhr = new XMLHttpRequest();
-      xhr.open('GET', url, true);
-      xhr.setRequestHeader('Cookie', document.cookie);
-      xhr.onreadystatechange = function() {
-        if (xhr.readyState == XMLHttpRequest.DONE) {
-          if (xhr.status == 200) {
-            console.log(xhr.responseText);
-          } else {
-            console.error('Произошла ошибка:', xhr.status, xhr.statusText);
-          }
-        }
-      };
-      
-      xhr.send();
+       });
 }
 
 
@@ -100,7 +86,7 @@ function get_seans(){
        else{
 
 
-       const url = "http://127.0.0.1:8000/api/get_orders/?date="+date+"&tableID="+table;
+       const url = "/api/get_orders/?date="+date+"&tableID="+table;
        console.log(url);
        var rowCount = mytable.rows.length;
 

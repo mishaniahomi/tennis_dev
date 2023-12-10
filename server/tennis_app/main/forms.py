@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*- 
 from django import forms
 from .models import Customer, Order, RegistrationCompetition
 import datetime as dt
@@ -18,13 +19,13 @@ class OrderForm(forms.ModelForm):
                                                                      (dt.datetime.now() + dt.timedelta(days=1)).date(),
                                                                      (dt.datetime.now() + dt.timedelta(days=1)).date()
                                                                   ),
-                                                                 (
-                                                                     (dt.datetime.now() + dt.timedelta(days=2)).date(),
-                                                                     (dt.datetime.now() + dt.timedelta(days=2)).date()
-                                                                 )
+                                                                 #(
+                                                                     #(dt.datetime.now() + dt.timedelta(days=2)).date(),
+                                                                     #(dt.datetime.now() + dt.timedelta(days=2)).date()
+                                                                 #)
                                                                  ]
 
-    date = forms.ChoiceField(choices=choices, widget=forms.Select(attrs={'label': 'Дата', 'class': 'form-control', 'onchange': 'get_free_tables()'}) )
+    date = forms.ChoiceField(label='Дата', choices=choices, widget=forms.Select(attrs={'class': 'form-control', 'onchange': 'get_free_tables()'}) )
 
     class Meta:
         model = Order

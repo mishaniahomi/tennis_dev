@@ -8,7 +8,6 @@
 
 
 
-{% if user.is_authenticated %}
 <button id="record" class="btn btn-dark " id="show-form-btn" onclick="show_form()">Запись online</button>
 
 <div class="table_form form-container" >
@@ -21,7 +20,6 @@
                     <div class="form-group"  >
                         {% csrf_token %}
                         {{ form.as_p }}
-                        <p>Цена вашего заказа:</p> <p id="IDprice"></p>
                         <button type="submit" class="btn btn-primary">Забронировать</button>
                         <a href="{% url 'check_free_table' %}">Посмотреть занятость столов</a>
                     </div>
@@ -31,9 +29,6 @@
         </div>
     </div>
 </div>
-{% else %}
-<a href="{% url 'login' %}" id="record" class="btn btn-dark ">Ввойти для записи</a>
-{% endif %}
 
 
 <div class="container">

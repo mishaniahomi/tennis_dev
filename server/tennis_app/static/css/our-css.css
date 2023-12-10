@@ -4,7 +4,9 @@
 }
 .content {
   min-height: calc(100vh - 80px);
+  
 }
+
 .form-container {
   position: fixed;
   z-index: 999;
@@ -35,19 +37,18 @@
 
 .close-btn {
   position: absolute;
-  top: 60px;
-  right: 10px;
+  top:-5px;
+  right: 0px;
   width: 30px;
   height: 30px;
   font-size: 24px;
   font-weight: bold;
-  color: white;
+  color: rgb(127, 127, 127);
   cursor: pointer;
 }
 
 .navbar {
     position: fixed;
-
     width: 100%;
 }
 
@@ -105,8 +106,8 @@ animation: glowing 1300ms infinite;
 
 
 
-  footer{
-     color: #FFF;
+footer{
+    color: #FFF;
     background-color: #222222;
     margin-top: 20px;
     position: absolute ;

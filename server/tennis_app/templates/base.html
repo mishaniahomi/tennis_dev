@@ -3,31 +3,29 @@
 <!DOCTYPE html>
 <html>
   <head>
-      <meta charset="UTF-8">
-      <title>Теннис57</title>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link rel="icon" href="{% static 'image/favicon_1.ico' %}" type="image/x-icon">
-      <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
-      <link rel="stylesheet" href="{% static 'css/our-css.css' %}"/>
-      <script src="{% static 'js/jquery.min.js' %}"></script>
-      <script src="{% static 'js/my.js' %}"></script>
-      <script src="{% static 'js/bootstrap.min.js' %}"></script>
-
-
+    <meta charset="UTF-8">
+    <title>Теннис57</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="icon" href="{% static 'image/favicon_1.ico' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/our-css.css' %}"/>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/my.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
   </head>
-<body>
 
-<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+  <body>
 
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
       <a href="{% url 'main_index' %}" class="navbar-brand"><img src="{% static 'image/table-tennis.png' %}" width="40" height="40"></a>
- <button class="navbar-toggler" data-toggle="collapse" data-target="#MyNav" type="button" aria-controls="MyNav" aria-expanded="false" aria-label="Toggle Navigaion">
-  <span class="navbar-toggler-icon"></span>
-</button>
-
+      <button class="navbar-toggler" data-toggle="collapse" data-target="#MyNav" type="button" aria-controls="MyNav" aria-expanded="false" aria-label="Toggle Navigaion">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
       <div class="collapse navbar-collapse" id="MyNav">
         <ul class="navbar-nav">
-          <li class="nav-item"><a href="{% url 'main_index' %}#schedule" class="nav-link">Расписание</a></li>
+          <li class="nav-item-"><a href="{% url 'main_index' %}#schedule" class="nav-link">Расписание</a></li>
           <li class="nav-item"><a href="{% url 'main_index' %}#servises" class="nav-link">Услуги</a></li>
           <li class="nav-item"><a href="{% url 'main_index' %}#treners" class="nav-link">Тренеры</a></li>
           <li class="nav-item"><a href="{% url 'main_index' %}#tournament" class="nav-link">Турниры</a></li>
@@ -35,8 +33,7 @@
           <li class="nav-item"><a href="{% url 'main_index' %}#information" class="nav-link">Информация</a></li>
           <li class="nav-item"><a href="{% url 'main_index' %}#price-list" class="nav-link">Цены</a></li>
 
-
-                    {% if user.is_authenticated %}
+          {% if user.is_authenticated %}
             <li class="nav-item"><a class="btn btn-dark" href="{% url 'privateOffice' %}">Личный кабинет</a></li>
             <li class="nav-item"><a class="btn btn-dark" href="{% url 'main_logout' %}">Выход</a></li>
 
@@ -44,46 +41,60 @@
               <li class="nav-item">   <a class="btn btn-dark" href="{% url 'login' %}">Вход</a></li>
               <li class="nav-item">   <a href="{% url 'registration' %}" class="btn btn-dark">Регистрация</a></li>
 
-            {% endif %}
-       <li class="nav-item"> <button class="btn btn-dark" id="call">Позвонить</button></li>
-            </ul>
+          {% endif %}
+
+          <li class="nav-item"> <a href="tel:+79004849005" class="nav-link" id="call">Позвонить</a> </li>
+        </ul>
       </div>
-    </nav>
-<br>
-<br>
-<br>
-<br>
-<div class="content container">
-        {% block content %}
+    </nav><br><br><br><br>
+     <script>
+     $(document).on("click",function(){
+        $(".collapse").collapse("hide");
+        })
+        </script>
+    <div class="container text-center">
+        <p>
+            Внимание!
+            Запись на сайте функционирует в тестовом режиме!</p>
+            <p>Подтверждение записи ОБЯЗАТЕЛЬНО по тел. +7-900-484-9005 
+        </p>
+    </div>
+    
+          {% block content %}
 
-        {% endblock %}
-</div>
+          {% endblock %}
+        
 
 
- <footer class="footer ">
-        <div class="container">
-          <div class="footer-row">
-            <div>
-              <h5>Теннис57</h5>
-              <p>Квалифицированный тренерский состав</p>
-              <p>Обучение людей всех возрастов</p>
-            </div>
-            <div>
-              <p>Профессиональное напольное покрытие</p>
-              <p>Профессиональные столы и сетки</p>
-              <p>Размеры площадок соответствуют Федеральным стандартам</p>
-              <p>Предоставляем профессиональные ракетки и мячи</p>
-            </div>
-            <div>
-              <p>Мы в социальных сетях</p>
-              <a href="https://www.youtube.com/channel/UC7coei8S1b7G4QjWXCUpfzQ"><img src="{% static 'image/youtube_1.png' %}"></a>
-              <a href="https://vk.com/tennis57"><img src="{% static 'image/VK_Blue_Logo_t.png' %}"></a><br>
-              <p>Телефон для связи:</p>
-              <p>+7 900 484-90-05</p>
-              <p>ул. Лескова, 16а, второй этаж</p>
-            </div>
+    <footer class="footer ">
+      <div class="container">
+        <div class="footer-row">
+          
+          <!--<div>
+            <h5>Теннис57</h5>
+            <p>Квалифицированный тренерский состав</p>
+            <p>Обучение людей всех возрастов</p>
+          </div>-->
+          
+          <div>
+            <p>Профессиональное напольное покрытие</p>
+            <p>Профессиональные столы и сетки</p>
+            <p>Размеры площадок соответствуют Федеральным стандартам</p>
+            <p>Предоставляем профессиональные ракетки и мячи</p>
+          <!--</div>
+          
+          <div>-->
+            <p>Мы в социальных сетях</p>
+            <a href="https://www.youtube.com/channel/UC7coei8S1b7G4QjWXCUpfzQ"><img src="{% static 'image/youtube_1.png' %}"></a>
+            <a href="https://vk.com/tennis57"><img src="{% static 'image/VK_Blue_Logo_t.png' %}"></a><br>
+            <p>Телефон для связи:</p>
+            <p>+7 900 484-90-05</p>
+            <p>ул. Лескова, 16а, второй этаж</p>
           </div>
+
         </div>
-      </footer>
-</body>
+        <p> © 2024 Tennis57.ru Все права защищены. </p>
+      </div>
+    </footer>
+  </body>
 </html>

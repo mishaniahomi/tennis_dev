@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*- 
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -47,6 +48,10 @@ class Table(models.Model):
         verbose_name = 'Стол'
         verbose_name_plural = 'Столы'
 
+class Servise(models.Model):
+    serviseName = models.CharField(max_length=32, verbose_name='НазваниеУслуги')
+    image = models.ImageField(null=True, verbose_name='ФотоУслуги')
+    describe = models.CharField(max_length=45, verbose_name='ОписаниеУслуги')
 
 class Trener(models.Model):
     surname = models.CharField(max_length=32, verbose_name='Фамилия')
@@ -193,7 +198,7 @@ class PriceList(models.Model):
         verbose_name_plural = 'Прайс-лист'
 
 
-class AbonementСustomer(models.Model):
+class CustomAbon(models.Model):
     customer = models.ForeignKey('Customer', on_delete=models.CASCADE, verbose_name='Клиент')
     abonement = models.ForeignKey('Abonement', on_delete=models.CASCADE, verbose_name='Вид абонемента')
     data_begin = models.DateField(verbose_name='Дата активации абонемента', default=timezone.now)
@@ -216,5 +221,3 @@ class AbonementСustomer(models.Model):
 class Abonement(models.Model):
     time_limit = models.TimeField(verbose_name='Время ограничения', null=True, blank=True)
     competition_limit = models.CharField(max_length=50, verbose_name="Ограничения по турнирам", choices=[('все', 'все'), ('Только детям и женщинам', 'Только детям и женщинам')])
-
-

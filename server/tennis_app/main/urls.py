@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*- 
 from django.urls import path
 from .views import index, registrations, code_control, CompetitionListView, CompetitionDetailView, OrderListApiView, \
     CreateRegistrationCompetition, OurLogoutView, privateOffice, OrderDeleteView, RegistrationCompetitionDeleteView, \

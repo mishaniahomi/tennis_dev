@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*- 
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 import secrets
@@ -13,9 +14,10 @@ from decimal import Decimal
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.contrib.auth.hashers import make_password
+from tennis.settings import EMAIL_HOST_USER
 
 import main
-from .models import Trener, Customer, CodeEmail, Table, Order, Competition, RegistrationCompetition, KindPriceListElement, AbonementСustomer
+from .models import Servise, Trener, Customer, CodeEmail, Table, Order, Competition, RegistrationCompetition, KindPriceListElement, CustomAbon
 from .forms import CustomerRegistrtionForm, OrderForm, RegistrationCompetitionForm
 from .serializers import TableSerializer, OrderSerializer
 
@@ -143,7 +145,7 @@ class GetPriceApiView(APIView):
         # Если абонемент активный, то вернуть 0 рублей
 
         customer = get_object_or_404(Customer, user=request.user)
-        abonements = AbonementСustomer.objects.filter(customer=customer, )
+        abonements = CustomAbon.objects.filter(customer=customer, )
         if abonements:
             for abonement in abonements:
                 if abonement.is_active():
@@ -226,6 +228,7 @@ class CompetitionListView(ListView):
 def index(request):
     flag = False
     message = ""
+    servises = Servise.objects.all()
     treners = Trener.objects.all()
     if request.method == 'POST':
         if request.user.is_authenticated:
@@ -261,8 +264,9 @@ def index(request):
                                             Продолжительность: {order.duration};\n
                                             Окончание: {order.endtime};\n
                                             Ученик: {customer};\n
+                                            Телефон: {customer.phone_number};\n
                                             ''',
-                        'P.S. tennis',
+                        EMAIL_HOST_USER,
                         [trener.email],
                         fail_silently=False
                     )
@@ -277,7 +281,7 @@ def index(request):
     form.fields['trenerID'].queryset = Trener.objects.filter(is_active=True)
     services_types = KindPriceListElement.objects.filter(is_active=True)
 
-    return render(request, 'main/index.html', {'form': form, 'treners': treners, 'services_types': services_types, 'flag': flag, 'message': message})
+    return render(request, 'main/index.html', {'form': form, 'treners': treners, 'servises': servises, 'services_types': services_types, 'flag': flag, 'message': message})
 
 
 def code_control(request, code):
@@ -318,8 +322,8 @@ def registrations(request):
             send_mail(
                 'Здравствуйте',
                 '''Был запрос на создание аккаунта!\n
-                Ccылка для подтверждения: http://127.0.0.1:8000/code_control/{}'''.format(new_code_email.code),
-                'P.S. tennis',
+                Ccылка для подтверждения: http://tennis57.ru/code_control/{}'''.format(new_code_email.code),
+                EMAIL_HOST_USER,
                 [new_code_email.email],
                 fail_silently=False
             )

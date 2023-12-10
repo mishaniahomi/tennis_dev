@@ -2,3 +2,7 @@ https://hub.docker.com/_/postgres # отсюда надо скачать postgre
 https://habr.com/ru/articles/578744/ # отсюда настройку
 sudo docker-compose build
 sudo docker-compose up
+
+homi@homi-VirtualBox:~/PycharmProjects/tennis_devops$ git remote add homi https://github.com/mishaniahomi/tennis_dev.git
+homi@homi-VirtualBox:~/PycharmProjects/tennis_devops$ git branch -M main
+homi@homi-VirtualBox:~/PycharmProjects/tennis_devops$ git push -u homi main

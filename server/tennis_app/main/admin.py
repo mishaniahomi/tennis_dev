@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*- 
 from django.contrib import admin
 
-from .models import Customer, Table, Trener, Order, Competition, RegistrationCompetition, CodeEmail, PriceList, KindPriceListElement, Photo, Abonement, AbonementСustomer
+from .models import Servise, Customer, Table, Trener, Order, Competition, RegistrationCompetition, CodeEmail, PriceList, KindPriceListElement, Photo, Abonement, CustomAbon
 from django_admin_filters import DateRangePicker
 
 
@@ -32,6 +33,10 @@ class MyDateRangePicker(DateRangePicker):
     WIDGET_END_TOP = -350
     WIDGET_END_LEFT = -400
 
+@admin.register(Servise)
+class ServiseAdmin(admin.ModelAdmin):
+    list_display = ("serviseName", "image", "describe")
+    list_filter = ("serviseName", "image", "describe")
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
@@ -87,7 +92,7 @@ class KindPriceListElementAdmin(admin.ModelAdmin):
     list_filter = ("name", "is_active")
 
 
-@admin.register(AbonementСustomer)
+@admin.register(CustomAbon)
 class KindPriceListElementAdmin(admin.ModelAdmin):
     list_display = ("customer", "abonement", "data_begin", "duration", "data_end")
     list_filter = ("customer", "abonement", "data_begin", "duration", "data_end")
