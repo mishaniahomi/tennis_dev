@@ -66,10 +66,7 @@ def privateOffice(request):
                     comps = Competition.objects.filter(title=request.GET.getlist('comp_name')[0])
                     for comp in comps:
                         competitions += RegistrationCompetition.objects.select_related('competitionID').filter(competitionID_id=comp.id, customerID=customer)
-                if len(comp_date) and request.GET['comp_date'] != '':
-                    comps = Competition.objects.filter(data=request.GET.getlist('comp_date')[0])
-                    for comp in comps:
-                        competitions += RegistrationCompetition.objects.select_related('competitionID').filter(competitionID_id=comp.id, customerID=customer)
+                if len(comp_date) and request.GET['comp_date'] != '':ute))tomer)
                 if len(comp_price) and request.GET['comp_price'] != '':
                     comps = Competition.objects.filter(price=Decimal.from_float(float(request.GET.getlist('comp_price')[0])))
                     for comp in comps:
@@ -120,18 +117,33 @@ class OrderListApiView(APIView):
         time = self.request.GET.getlist('time')[0]
         duration = self.request.GET.getlist('duration')[0]
         if date and time and duration:
-            time_begin = datetime.strptime(time, "%H:%M:%S").time()
+            time_begin = timedelta(
+                    hours=datetime.strptime(time, "%H:%M:%S").time().hour,
+                    minutes=datetime.strptime(time, "%H:%M:%S").time().minute + 1
+                ) 
+            print(time_begin)
             time_end = timedelta(hours=
                                  datetime.strptime(duration, "%H:%M:%S").time().hour +
                                  datetime.strptime(time, "%H:%M:%S").time().hour,
                                  minutes=
                                  datetime.strptime(duration, "%H:%M:%S").time().minute +
-                                 datetime.strptime(time, "%H:%M:%S").time().minute)
+                                 datetime.strptime(time, "%H:%M:%S").time().minute-1)
+            print(time_end)
+            if datetime.strptime(time, "%H:%M:%S").time().minute != 59:
+                time_begin = timedelta(
+                    hours=datetime.strptime(time, "%H:%M:%S").time().hour,
+                    minutes=datetime.strptime(time, "%H:%M:%S").time().minute + 1
+                ) 
+            else:
+                time_begin = timedelta(
+                    hours=datetime.strptime(time, "%H:%M:%S").time().hour+1,
+                    minutes=0
+                ) 
             orders = set(Order.objects.filter(date=date).values_list("tableID", "time", "endtime")) \
                      - set(Order.objects.filter(
                 date=date, time__gt=time_end.__str__()).values_list("tableID", "time", "endtime")) \
                      - set(Order.objects.filter(
-                date=date, endtime__lt=time_begin).values_list("tableID", "time", "endtime"))
+                date=date, endtime__lt=time_begin.__str__()).values_list("tableID", "time", "endtime"))
             close_table = set([i[0] for i in orders])
             all_tables = Table.objects.exclude(pk__in=close_table)
             return Response({'free_tablies': TableSerializer(all_tables, many=True).data})
