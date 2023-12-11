@@ -135,7 +135,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 EMAIL_USE_TLS = True
-#EMAIL_USE_SSL = False
+# EMAIL_USE_SSL = False
 EMAIL_HOST = 'smtp.mail.ru'
 EMAIL_PORT = 2525
 EMAIL_HOST_USER = 'tennis57@bk.ru'

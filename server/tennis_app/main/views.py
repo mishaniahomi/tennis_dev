@@ -189,9 +189,8 @@ class GetPriceApiView(APIView):
         if trener:
             price = hours * trener.price + minuties * trener.price / 60
 
-
-
         return Response({'price': price})
+
 
 def CreateRegistrationCompetition(request, pk):
     if request.user.is_authenticated:
@@ -255,7 +254,10 @@ def index(request):
                 order.time = form.data['time']
                 table = get_object_or_404(Table, id=form.data['tableID'])
                 if form.data['trenerID']:
-                    trener = get_object_or_404(Trener, id=form.data['trenerID'])
+                    try:
+                        trener = get_object_or_404(Trener, id=form.data['trenerID'])       
+                    except:
+                        trener = None
                     order.trenerID = trener
                 order.tableID = table
                 customer = get_object_or_404(Customer, user=request.user)
