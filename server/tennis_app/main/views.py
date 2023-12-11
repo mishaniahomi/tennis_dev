@@ -124,14 +124,12 @@ class OrderListApiView(APIView):
                     hours=datetime.strptime(time, "%H:%M:%S").time().hour,
                     minutes=datetime.strptime(time, "%H:%M:%S").time().minute + 1
                 ) 
-            print(time_begin)
             time_end = timedelta(hours=
                                  datetime.strptime(duration, "%H:%M:%S").time().hour +
                                  datetime.strptime(time, "%H:%M:%S").time().hour,
                                  minutes=
                                  datetime.strptime(duration, "%H:%M:%S").time().minute +
                                  datetime.strptime(time, "%H:%M:%S").time().minute-1)
-            print(time_end)
             if datetime.strptime(time, "%H:%M:%S").time().minute != 59:
                 time_begin = timedelta(
                     hours=datetime.strptime(time, "%H:%M:%S").time().hour,
@@ -253,12 +251,12 @@ def index(request):
                 order.duration = form.data['duration']
                 order.time = form.data['time']
                 table = get_object_or_404(Table, id=form.data['tableID'])
-                if form.data['trenerID']:
-                    try:
-                        trener = get_object_or_404(Trener, id=form.data['trenerID'])       
-                    except:
-                        trener = None
-                    order.trenerID = trener
+                if 'trenerID' in form.data:
+                    if form.data['trenerID'] :
+                        trener = get_object_or_404(Trener, id=form.data['trenerID'])      
+                else:
+                    trener = None
+                order.trenerID = trener
                 order.tableID = table
                 customer = get_object_or_404(Customer, user=request.user)
                 order.customerID = customer

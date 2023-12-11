@@ -221,3 +221,5 @@ class CustomAbon(models.Model):
 class Abonement(models.Model):
     time_limit = models.TimeField(verbose_name='Время ограничения', null=True, blank=True)
     competition_limit = models.CharField(max_length=50, verbose_name="Ограничения по турнирам", choices=[('все', 'все'), ('Только детям и женщинам', 'Только детям и женщинам')])
+
+    
