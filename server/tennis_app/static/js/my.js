@@ -18,7 +18,7 @@ function get_free_tables(){
        while (selectElement.options.length > 0) {
                 selectElement.remove(0);
        }
-       //console.log(date, time, duration);
+       
        const url = "/api/order_list_view?date="+date+"&time="+time+":00&duration="+duration;
 
        $.get(url, function(data, status){

@@ -66,7 +66,10 @@ def privateOffice(request):
                     comps = Competition.objects.filter(title=request.GET.getlist('comp_name')[0])
                     for comp in comps:
                         competitions += RegistrationCompetition.objects.select_related('competitionID').filter(competitionID_id=comp.id, customerID=customer)
-                if len(comp_date) and request.GET['comp_date'] != '':ute))tomer)
+                if len(comp_date) and request.GET['comp_date'] != '':
+                    comps = Competition.objects.filter(data=request.GET.getlist('comp_date')[0])
+                    for comp in comps:
+                        competitions += RegistrationCompetition.objects.select_related('competitionID').filter(competitionID_id=comp.id, customerID=customer)
                 if len(comp_price) and request.GET['comp_price'] != '':
                     comps = Competition.objects.filter(price=Decimal.from_float(float(request.GET.getlist('comp_price')[0])))
                     for comp in comps:
