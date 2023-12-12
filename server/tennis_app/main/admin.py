@@ -10,7 +10,7 @@ class MyDateRangePicker(DateRangePicker):
     FROM_LABEL = "От"
     TO_LABEL = "До"
     ALL_LABEL = 'Все'
-    CUSTOM_LABEL = "пользовательский"
+    CUSTOM_LABEL = "пользовательский1"
     NULL_LABEL = "без даты"
     BUTTON_LABEL = "Задать интервал"
     DATE_FORMAT = "YYYY-MM-DD HH:mm"
