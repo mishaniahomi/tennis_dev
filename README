@@ -6,3 +6,6 @@ sudo docker-compose up
 homi@homi-VirtualBox:~/PycharmProjects/tennis_devops$ git remote add homi https://github.com/mishaniahomi/tennis_dev.git
 homi@homi-VirtualBox:~/PycharmProjects/tennis_devops$ git branch -M main
 homi@homi-VirtualBox:~/PycharmProjects/tennis_devops$ git push -u homi main
+
+
+docker run -d --name redis-stack -p 6379:6379 -p 8001:8001 redis/redis-stack:latest

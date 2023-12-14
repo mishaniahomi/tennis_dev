@@ -1,9 +1,28 @@
 
 services:
-   server:
+    server:
        build: ./server
+       restart: always
        volumes:
         - ./server/tennis_app:/app/
        command: python3 manage.py runserver 0.0.0.0:8000
        ports:
-           - 8000:8000
+        - 8000:8000
+       depends_on:
+        - db
+        - redis
+    redis:
+        image: redis/redis-stack
+        ports:
+         - 8001:8001
+    db:
+        image: postgres:13.0-alpine
+        volumes:
+         - ./postgres_data:/var/lib/postgresql/data/
+        ports: 
+         - 5432:5432
+        restart: always
+        environment:
+         - POSTGRES_DB=tennis_db
+         - POSTGRES_USER=tennis_user
+         - POSTGRES_PASSWORD=tennis_user    
