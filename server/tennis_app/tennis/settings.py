@@ -9,7 +9,8 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+from celery.schedules import crontab
+import tennis.tasks
 from pathlib import Path
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -165,4 +166,13 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 LOGIN_REDIRECT_URL = '/'
 
+CELERY_BEAT_SCHEDULE = {
+    "sample_task": {
+        "task": "tennis.tasks.sample_task",
+        "schedule": crontab(minute="*/1"),
+    },
+}
 
+
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
