@@ -14,13 +14,13 @@ from decimal import Decimal
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.contrib.auth.hashers import make_password
-from tennis.settings import EMAIL_HOST_USER
 
+from tennis.settings import EMAIL_HOST_USER
 import main
 from .models import Servise, Trener, Customer, CodeEmail, Table, Order, Competition, RegistrationCompetition, KindPriceListElement, CustomAbon
 from .forms import CustomerRegistrtionForm, OrderForm, RegistrationCompetitionForm
 from .serializers import TableSerializer, OrderSerializer
-
+from .tasks import send_email_task
 
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
@@ -271,19 +271,15 @@ def index(request):
                 if order.trenerID is not None:
                     order.price = hours * trener.price + minuties * trener.price / 60
                     order.save()
-                    send_mail(
-                        'Здравствуйте',
-                        f'''К Вам записались на занятие!\n
-                                            Дата: {order.date};\n
-                                            Время: {order.time};\n
-                                            Продолжительность: {order.duration};\n
-                                            Окончание: {order.endtime};\n
-                                            Ученик: {customer};\n
-                                            Телефон: {customer.phone_number};\n
-                                            ''',
+                    send_email_task.delay(
+                        order.date,
+                        order.time,
+                        order.duration,
+                        order.endtime,
+                        customer.__str__(),
+                        customer.phone_number,
                         EMAIL_HOST_USER,
-                        [trener.email],
-                        fail_silently=False
+                        trener.email
                     )
                 else:
                     order.save()

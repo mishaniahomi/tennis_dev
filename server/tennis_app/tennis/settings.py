@@ -154,15 +154,23 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
+# EMAIL_USE_TLS = True
+# # EMAIL_USE_SSL = False
+# EMAIL_HOST = 'smtp.mail.ru'
+# EMAIL_PORT = 2525
+# EMAIL_HOST_USER = 'tennis57@bk.ru'
+# EMAIL_HOST_PASSWORD = 'cumnwzF47NKwAEnBxiHs'
+# SERVER_EMAIL = EMAIL_HOST_USER
+# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
 EMAIL_USE_TLS = True
-# EMAIL_USE_SSL = False
-EMAIL_HOST = 'smtp.mail.ru'
-EMAIL_PORT = 2525
-EMAIL_HOST_USER = 'tennis57@bk.ru'
-EMAIL_HOST_PASSWORD = 'cumnwzF47NKwAEnBxiHs'
-SERVER_EMAIL = EMAIL_HOST_USER
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'misha.homi@gmail.com'
+EMAIL_HOST_PASSWORD = 'yrvsctiipzcibetb'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
 
 LOGIN_REDIRECT_URL = '/'
 
