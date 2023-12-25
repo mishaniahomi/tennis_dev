@@ -2,7 +2,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 import secrets
-from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView, DeleteView
 from rest_framework.views import APIView
@@ -20,7 +19,7 @@ import main
 from .models import Servise, Trener, Customer, CodeEmail, Table, Order, Competition, RegistrationCompetition, KindPriceListElement, CustomAbon
 from .forms import CustomerRegistrtionForm, OrderForm, RegistrationCompetitionForm
 from .serializers import TableSerializer, OrderSerializer
-from .tasks import send_email_task
+from .tasks import send_email_task, send_code_email_task
 
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
@@ -278,7 +277,6 @@ def index(request):
                         order.endtime,
                         customer.__str__(),
                         customer.phone_number,
-                        EMAIL_HOST_USER,
                         trener.email
                     )
                 else:
@@ -326,18 +324,10 @@ def registrations(request):
             new_customer.sex = form.data['sex']
             new_customer.save()
 
-            token_href = secrets.token_hex()
+            token_href = secrets.token_hex()[:15]
             new_code_email = CodeEmail(email=new_user.email, code=token_href)
             new_code_email.save()
-
-            send_mail(
-                'Здравствуйте',
-                '''Был запрос на создание аккаунта!\n
-                Ccылка для подтверждения: http://tennis57.ru/code_control/{}'''.format(new_code_email.code),
-                EMAIL_HOST_USER,
-                [new_code_email.email],
-                fail_silently=False
-            )
+            send_code_email_task.delay(new_code_email.code, new_code_email.email)
             return render(request, 'registration/register_done.html')
 
     form = CustomerRegistrtionForm()

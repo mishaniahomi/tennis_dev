@@ -51,8 +51,7 @@ class CustomerRegistrtionForm(forms.ModelForm):
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'patronymic': forms.TextInput(attrs={'class': 'form-control'}),
             'data_or_birthday': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'phone_number': forms.TextInput(attrs={'class': 'form-control', 'type': 'tel', "placeholder": "8 (123) "
-                                                                                                          "456-78-90"}),
+            'phone_number': forms.TextInput(attrs={'class': 'form-control tel', 'type': 'tel'}),
             'sex': forms.Select(attrs={'class': 'form-control'},
                                 choices=[('мужской', 'мужской'), ('женский', 'женский')]),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),

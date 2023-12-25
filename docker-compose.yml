@@ -14,23 +14,23 @@ services:
             - CELERY_BROKER=redis://redis:6379/0
             - CELERY_BACKEND=redis://redis:6379/0
        depends_on:
-        # - db
+        - db
         - redis
     redis:
         image: redis/redis-stack
         ports:
          - 8001:8001
-    # db:
-    #     image: postgres:13.0-alpine
-    #     volumes:
-    #      - .postgres_data:/var/lib/postgresql/data/
-    #     ports: 
-    #      - 5432:5432
-    #     restart: always
-    #     environment:
-    #      - POSTGRES_DB=tennis_db
-    #      - POSTGRES_USER=tennis_user
-    #      - POSTGRES_PASSWORD=tennis_user
+    db:
+        image: postgres:13.0-alpine
+        volumes:
+         - .postgres_data:/var/lib/postgresql/data/
+        ports: 
+         - 5432:5432
+        restart: always
+        environment:
+         - POSTGRES_DB=tennis_db
+         - POSTGRES_USER=tennis_user
+         - POSTGRES_PASSWORD=tennis_user
     celery:
         build: ./server
         command: celery -A tennis worker -l info

@@ -79,12 +79,12 @@ WSGI_APPLICATION = 'tennis.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 # DATABASES_setting = {
 #     'default': {
 #         "ENGINE":'django.db.backends.postgresql_psycopg2', # os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
@@ -95,16 +95,16 @@ DATABASES = {
 #         "PORT": os.environ.get("SQL_PORT", "5432"),
 #     }
 # }
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'tennis_db',
-#         'USER': 'tennis_user',
-#         'PASSWORD': 'tennis_user',
-#         'HOST': 'db',
-#         'PORT': os.environ.get("SQL_PORT", "5432"),
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'tennis_db',
+        'USER': 'tennis_user',
+        'PASSWORD': 'tennis_user',
+        'HOST': 'db',
+        'PORT': os.environ.get("SQL_PORT", "5432"),
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

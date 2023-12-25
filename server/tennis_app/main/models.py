@@ -8,7 +8,7 @@ import datetime as dt
 
 
 class CodeEmail(models.Model):
-    code = models.CharField(max_length=15)
+    code = models.TextField(max_length=15)
     email = models.EmailField()
 
     def __str__(self):
