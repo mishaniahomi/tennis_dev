@@ -1,11 +1,6 @@
-https://hub.docker.com/_/postgres # отсюда надо скачать postgres
-https://habr.com/ru/articles/578744/ # отсюда настройку
 sudo docker-compose build
 sudo docker-compose up
 
 homi@homi-VirtualBox:~/PycharmProjects/tennis_devops$ git remote add homi https://github.com/mishaniahomi/tennis_dev.git
 homi@homi-VirtualBox:~/PycharmProjects/tennis_devops$ git branch -M main
 homi@homi-VirtualBox:~/PycharmProjects/tennis_devops$ git push -u homi main
-
-
-docker run -d --name redis-stack -p 6379:6379 -p 8001:8001 redis/redis-stack:latest
